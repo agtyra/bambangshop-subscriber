@@ -85,5 +85,12 @@ This is the place for you to write reflections:
 ### Mandatory (Subscriber) Reflections
 
 #### Reflection Subscriber-1
+1. Why do we use RwLock<Vec<Notification>> instead of Mutex<Vec<Notification>>?
+- In this case, we used RwLock to handle multiple threads accessing the vector of notifications safely. The reason we chose RwLock over Mutex is because RwLock lets multiple threads read from the data at the same time, as long as no one is writing to it. But if a thread needs to write, it gets exclusive access.
+If we used a Mutex, only one thread could access the data at all—whether it’s reading or writing. That would slow things down, especially if most of our operations are just reads. So basically, RwLock gives us better performance when there are more reads than writes, which is the case here.
+
+2. Why do we use lazy_static!, and why can't we just mutate a static variable like in Java?
+- In Java, it’s common to have static variables that we can change using static methods. But Rust works differently. Static variables in Rust need to be known at compile time and are usually immutable. That’s because Rust puts a strong focus on safety, especially around shared mutable data.
+Since we can't directly make a mutable static variable that’s safe, we use lazy_static!. This macro lets us define things like vectors or maps that are initialized when first used and wrapped in something like RwLock to handle concurrency safely. Without lazy_static, we couldn’t create a mutable, global variable like our notifications vector in a thread-safe way.
 
 #### Reflection Subscriber-2
