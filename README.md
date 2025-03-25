@@ -94,3 +94,12 @@ If we used a Mutex, only one thread could access the data at all—whether it’
 Since we can't directly make a mutable static variable that’s safe, we use lazy_static!. This macro lets us define things like vectors or maps that are initialized when first used and wrapped in something like RwLock to handle concurrency safely. Without lazy_static, we couldn’t create a mutable, global variable like our notifications vector in a thread-safe way.
 
 #### Reflection Subscriber-2
+1. Did I explore beyond the tutorial (like src/lib.rs)?
+- To be honest, I didn’t dive deep into src/lib.rs or other files outside the main tutorial steps. The reason is that I was focused on understanding how the notification system works first, especially how the Receiver and Main apps communicate. Since everything I needed to test the core functionality was already covered in the steps, I prioritized getting that working before exploring more. That said, I’m curious now about how Rocket handles routing and shared state behind the scenes—so I might explore lib.rs next time.
+
+2. How does the Observer pattern help with adding more subscribers? What about multiple instances of the Main app?
+- The Observer pattern really makes it easy to add new subscribers—since each Receiver just needs to register its URL and it automatically gets notified. We don’t need to change the main logic every time we add a new one, which is super helpful. When I tried running multiple Receiver instances, they all got the notifications without any issue.
+As for running multiple instances of the Main app, it might be a bit trickier. Right now, since the state (like notifications or subscriber lists) is stored in memory, each instance would have its own separate copy. That means a new Main instance wouldn't automatically know about subscribers registered in the others—so we’d need to set up a shared database or service to coordinate them if we want to scale that side too.
+
+3. Did I write my own tests or improve documentation in Postman?
+- No, I didn’t write my own tests or make additional documentation in Postman. For this tutorial, I focused more on making sure the basic flow worked correctly—sending notifications and seeing the results. I realize that adding tests or better documentation would make the system more robust and easier to maintain, so it's definitely something I want to try in future projects or group assignments.
